@@ -162,41 +162,50 @@ def do_one_round():
         ###################################文件创建完成，开始发送部分
         ##执行邮件发送动作
         logging.info("send file by email")
-        if(emailInfo["enable"]==True):
-            attachfile=[]
-            if(emailInfo["epub"]):
-                attachfile.append(epubFile)
-            if(emailInfo["mobi"]):
-                attachfile.append(mobiFile)
-            sendEmail(send_from=emailInfo["from"],
-                        send_to=emailInfo["to"],
-                        subject="Convert",
-                        text="delivery by your github action.\n\n--\n\n",
-                        files=attachfile)
-        else:
-            logging.info("Email is disabled, skip")
+        try:
+            if(emailInfo["enable"]==True):
+                attachfile=[]
+                if(emailInfo["epub"]):
+                    attachfile.append(epubFile)
+                if(emailInfo["mobi"]):
+                    attachfile.append(mobiFile)
+                sendEmail(send_from=emailInfo["from"],
+                            send_to=emailInfo["to"],
+                            subject="Convert",
+                            text="delivery by your github action.\n\n--\n\n",
+                            files=attachfile)
+            else:
+                logging.info("Email is disabled, skip")
+        except Exception as e:
+            logging.info("error when sending email: " + e )
         #执行webdav动作
         logging.info("send file by webdav")
-        if(webdavInfo["enable"]==True):
-            attachfile=[]
-            if(webdavInfo["epub"]):
-                attachfile.append(epubFile)
-            if(webdavInfo["mobi"]):
-                attachfile.append(mobiFile)
-            for thisfile in attachfile:
-                fileb = open(thisfile,'rb')
-                r = requests.put(webdavInfo["server"]+thisfile, data=fileb,auth = requests.auth.HTTPBasicAuth(webdavInfo["user"], webdavInfo["pwd"]))
-                #print(r)
-                logging.info("文件上传返回代码"+str(r.status_code))
-            logging.info("webdav上传完成")
-        else:
-            logging.info("webdav is disabled, skip")
+        try:
+            if(webdavInfo["enable"]==True):
+                attachfile=[]
+                if(webdavInfo["epub"]):
+                    attachfile.append(epubFile)
+                if(webdavInfo["mobi"]):
+                    attachfile.append(mobiFile)
+                for thisfile in attachfile:
+                    fileb = open(thisfile,'rb')
+                    r = requests.put(webdavInfo["server"]+thisfile, data=fileb,auth = requests.auth.HTTPBasicAuth(webdavInfo["user"], webdavInfo["pwd"]))
+                    #print(r)
+                    logging.info("文件上传返回代码"+str(r.status_code))
+                logging.info("webdav上传完成")
+            else:
+                logging.info("webdav is disabled, skip")
+        except Exception as e:
+            logging.info("error when upload to webdav: " + e )
         ##执行telegram发送动作
         logging.info("upload file to telegram")
-        if(config["telegram"]["epub"]):
-            requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): open(epubFile,"rb")})
-        if(config["telegram"]["mobi"]):
-            requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): open(mobiFile,"rb")})
+        try:
+            if(config["telegram"]["epub"]):
+                requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): open(epubFile,"rb")})
+            if(config["telegram"]["mobi"]):
+                requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): open(mobiFile,"rb")})
+        except Exception as e:
+            logging.info("error when send to telegram: " + e )
         ##执行github动作
         ##因为github会删除文档，所以要最后执行
         logging.info("upload file to github repo")
