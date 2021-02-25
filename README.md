@@ -94,4 +94,6 @@ Gen epub and mobi Books from RSS with github action
    36kr
 
    `h1,h2,h3,h4,h5,h6{font-size:1em; font-weight:normal}`
+   
+   参考: https://blog.xsnet.top/shi-yong-github-action-bu-shu-rss2mobibing-fa-song-dao-kindle.html
 
