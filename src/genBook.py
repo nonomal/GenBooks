@@ -183,9 +183,9 @@ def do_one_round():
         try:
             if(boox["enable"]==True):
                 if(boox["epub"]):
-                    print(send2Boox(boox['token'],epubFile.encode("utf-8").decode("latin1"),epubRB).putFile())
+                    print(send2Boox(boox['token'],epubFile.encode("utf-8").decode("latin1"),epubRB.read()).putFile())
                 if(boox["mobi"]):
-                    print(send2Boox(boox['token'],mobiFile.encode("utf-8").decode("latin1"),mobiRB).putFile())
+                    print(send2Boox(boox['token'],mobiFile.encode("utf-8").decode("latin1"),mobiRB.read()).putFile())
         except Exception as e:
             logging.info("error when send to boox: " + e )
         ##执行github动作
