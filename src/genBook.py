@@ -4,47 +4,15 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from datetime import datetime, timedelta
 import os,smtplib,sys,pytz,time,logging,threading,subprocess,json,requests,shutil,_thread,processRss
+from boox import send2Boox
 logging.basicConfig(level=logging.INFO)
-
-config = os.environ.get("config",'''
-{
-    "title":"星索的RSS推送",
-    "feeds": [
-        {"name":"知乎热榜","url":"https://rsshub.xsnet.top/zhihu/hotlist?limit=30","saveimg":true,"imgquality":20,"css":"img.avatar,a.originUrl,div.view-more{display:none;}span.bio,span.author{font-size:0.7em;}div.question{margin-bottom:2cm;}"}
-        
-    ],
-    "emailinfo": {
-        "enable": false,
-        "to": "@kindle.cn",
-        "from": "@outlook.com",
-        "smtp": "smtp-mail.outlook.com",
-        "port": 25,
-        "pwd": "",
-        "epub": false,
-        "mobi": true
-    },
-    "webdav":{
-        "enable":false,
-        "server":"https://dav.jianguoyun.com/dav/genrss/",
-        "user":"@.cn",
-        "pwd":"",
-        "epub": false,
-        "mobi": true
-    },
-    "telegram":{
-        "enable":false,
-        "token":"",
-        "chat_id":"",
-        "epub":true,
-        "mobi":true
-    },
-    "github": {
-        "enable":false,
-        "epub":false,
-        "mobi":false
-    }
-}
-''')
+def getConfig():
+    ### 仅调试时使用
+    with open("5dEO.txt","r",encoding="utf8") as f:
+        conf = f.read()
+        f.close()
+    return conf
+config = os.environ.get("config",getConfig())
 
 logging.info("配置配置文件")
 if(config):
@@ -53,6 +21,7 @@ feeds = config["feeds"]
 booktitle = config["title"]
 emailInfo = config["emailinfo"]
 webdavInfo = config["webdav"]
+boox = config["boox"]
 CONFIG_PATH = './config'
 feed_file = "./config/time.txt"
 source_path = os.path.abspath(r'./template')
@@ -123,6 +92,7 @@ def sendEmail(send_from, send_to, subject, text, files):
                 Content_Disposition=f'attachment; filename="{os.path.basename(f)}"',
                 Name=os.path.basename(f)
             ))
+            fil.close()
     try:
         smtp = smtplib.SMTP_SSL(emailInfo["smtp"],emailInfo["port"])
     except:
@@ -160,6 +130,7 @@ def do_one_round():
         logging.info("Epub2Mobi")
         convert_to_mobi(epubFile, mobiFile)
         ###################################文件创建完成，开始发送部分
+        
         ##执行邮件发送动作
         logging.info("send file by email")
         try:
@@ -178,19 +149,19 @@ def do_one_round():
                 logging.info("Email is disabled, skip")
         except Exception as e:
             logging.info("error when sending email: " + e )
+        ##读取文件，防止删除时正在使用
+        epubRB = open(epubFile,"rb")
+        mobiRB = open(mobiFile,"rb")
+        ##---------------------
         #执行webdav动作
         logging.info("send file by webdav")
         try:
             if(webdavInfo["enable"]==True):
-                attachfile=[]
                 if(webdavInfo["epub"]):
-                    attachfile.append(epubFile)
+                    r = requests.put(webdavInfo["server"]+epubFile, data=epubRB,auth = requests.auth.HTTPBasicAuth(webdavInfo["user"], webdavInfo["pwd"]))
+                    logging.info("文件上传返回代码"+str(r.status_code))
                 if(webdavInfo["mobi"]):
-                    attachfile.append(mobiFile)
-                for thisfile in attachfile:
-                    fileb = open(thisfile,'rb')
-                    r = requests.put(webdavInfo["server"]+thisfile, data=fileb,auth = requests.auth.HTTPBasicAuth(webdavInfo["user"], webdavInfo["pwd"]))
-                    #print(r)
+                    r = requests.put(webdavInfo["server"]+mobiFile, data=mobiRB,auth = requests.auth.HTTPBasicAuth(webdavInfo["user"], webdavInfo["pwd"]))
                     logging.info("文件上传返回代码"+str(r.status_code))
                 logging.info("webdav上传完成")
             else:
@@ -200,13 +171,26 @@ def do_one_round():
         ##执行telegram发送动作
         logging.info("upload file to telegram")
         try:
-            if(config["telegram"]["epub"]):
-                requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): open(epubFile,"rb")})
-            if(config["telegram"]["mobi"]):
-                requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): open(mobiFile,"rb")})
+            if(config["telegram"]["enable"]==True):
+                if(config["telegram"]["epub"]):
+                    requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): epubRB})
+                if(config["telegram"]["mobi"]):
+                    requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): mobiRB})
         except Exception as e:
             logging.info("error when send to telegram: " + e )
+        ## 执行send2boox
+        logging.info("send 2 Boox")
+        try:
+            if(boox["enable"]==True):
+                if(boox["epub"]):
+                    print(send2Boox(boox['token'],epubFile.encode("utf-8").decode("latin1"),epubRB).putFile())
+                if(boox["mobi"]):
+                    print(send2Boox(boox['token'],mobiFile.encode("utf-8").decode("latin1"),mobiRB).putFile())
+        except Exception as e:
+            logging.info("error when send to boox: " + e )
         ##执行github动作
+        epubRB.close()
+        mobiRB.close()
         ##因为github会删除文档，所以要最后执行
         logging.info("upload file to github repo")
         if(config["github"]["enable"]==False):
