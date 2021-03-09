@@ -12,7 +12,7 @@ def getConfig():
         conf = f.read()
         f.close()
     return conf
-config = os.environ.get("config",getConfig())
+config = os.environ.get("config")
 
 logging.info("配置配置文件")
 if(config):
