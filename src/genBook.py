@@ -8,12 +8,12 @@ from boox import send2Boox
 logging.basicConfig(level=logging.INFO)
 def getConfig():
     ### 仅调试时使用
-    with open("5dEO.txt","r",encoding="utf8") as f:
+    with open("rss.txt","r",encoding="utf8") as f:
         conf = f.read()
         f.close()
     return conf
 config = os.environ.get("config")
-
+config = getConfig()
 logging.info("配置配置文件")
 if(config):
     config = json.loads(config)
@@ -186,12 +186,12 @@ def do_one_round():
         try:
             if(boox["enable"]==True):
                 if(boox["epub"]):
-                    with open(epubFile,"r") as f:
-                        print(send2Boox(boox['token'],epubFile.encode("utf-8").decode("latin1"),f.read()).putFile())
+                    with open(epubFile,"rb") as f:
+                        print(send2Boox(boox['token'],epubFile.encode("utf-8").decode("latin1") ,f).putFile())
                         f.close()
                 if(boox["mobi"]):
-                    with open(mobiFile,"r") as f:
-                        print(send2Boox(boox['token'],mobiFile.encode("utf-8").decode("latin1"),f.read()).putFile())
+                    with open(mobiFile,"rb") as f:
+                        print(send2Boox(boox['token'],mobiFile.encode("utf-8").decode("latin1"),f).putFile())
                         f.close()
         except Exception as e:
             logging.info("error when send to boox: " + e )

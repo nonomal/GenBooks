@@ -108,5 +108,6 @@ class send2Boox:
                 return(False)
         except:
             return(False)
-#token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTA2MjE1LCJ3eFVuaW9uaWQiOiJvSXViWXZ2ZURZcFMzOEo5WUpJMUtTWlJBc2k4IiwibG9naW5UeXBlIjoid2VjaGF0IiwiaWF0IjoxNjE1MTY0OTYzLCJleHAiOjE2MTc3NTY5NjN9.Lg8O9-JikylKexD7UdL4jKpGvTGGH6FAMHnu_OSrVhk"
-#print(util(token,"1.txt","hahah").putFile())
+#token = "..Lg8O9-"
+#f=open("星索的.epub","rb")
+#print(send2Boox(token,"星索的.epub".encode("utf-8").decode("latin1"),f).putFile())
