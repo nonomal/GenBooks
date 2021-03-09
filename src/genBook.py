@@ -117,8 +117,9 @@ def do_one_round():
         logging.info(f"发现{project.updatenum}条RSS更新，开始Json2Epub")
         epubinfo = project.json2epub(json,booktitle)
         logging.info("Epub转换成功，准备保存Epub")
-        epubFile = f"{booktitle}.epub"
-        mobiFile = F"{booktitle}.mobi"
+        nowdate = time.strftime("%y%m%d%H",time.localtime())
+        epubFile = f"{booktitle}{nowdate}.epub"
+        mobiFile = F"{booktitle}{nowdate}.mobi"
         logging.info(f"删除旧的书籍(如果有)")
         if(os.path.exists(epubFile)):
             os.remove(epubFile)
