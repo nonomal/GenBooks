@@ -25,6 +25,7 @@ jobs:
         pip3 install feedparser
         pip3 install pillow
         pip3 install bs4
+        pip3 install oss2
     - name: 执行程序
       run: |
         python3 ./src/genBook.py
