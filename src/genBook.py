@@ -178,19 +178,24 @@ def do_one_round():
                     requests.post(f'https://api.telegram.org/bot{config["telegram"]["token"]}/sendDocument?chat_id={config["telegram"]["chat_id"]}', files = {"Document".lower(): mobiRB})
         except Exception as e:
             logging.info("error when send to telegram: " + e )
+        ##close rb open
+        epubRB.close()
+        mobiRB.close()
         ## 执行send2boox
         logging.info("send 2 Boox")
         try:
             if(boox["enable"]==True):
                 if(boox["epub"]):
-                    print(send2Boox(boox['token'],epubFile.encode("utf-8").decode("latin1"),epubRB.read()).putFile())
+                    with open(epubFile,"r") as f:
+                        print(send2Boox(boox['token'],epubFile.encode("utf-8").decode("latin1"),f.read()).putFile())
+                        f.close()
                 if(boox["mobi"]):
-                    print(send2Boox(boox['token'],mobiFile.encode("utf-8").decode("latin1"),mobiRB.read()).putFile())
+                    with open(mobiFile,"r") as f:
+                        print(send2Boox(boox['token'],mobiFile.encode("utf-8").decode("latin1"),f.read()).putFile())
+                        f.close()
         except Exception as e:
             logging.info("error when send to boox: " + e )
         ##执行github动作
-        epubRB.close()
-        mobiRB.close()
         ##因为github会删除文档，所以要最后执行
         logging.info("upload file to github repo")
         if(config["github"]["enable"]==False):
