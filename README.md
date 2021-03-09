@@ -67,6 +67,12 @@ Gen epub and mobi Books from RSS with github action
            "epub":true,
            "mobi":true
        },
+       "boox":{
+           "enable":false,
+           "token":"",
+           "epub":true,
+           "mobi":true
+       },
        "Github": {
            "enable":false,
            "epub":false,
