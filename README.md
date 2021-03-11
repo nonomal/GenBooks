@@ -30,7 +30,7 @@ Gen epub and mobi Books from RSS with github action
 
    ### CONFIG
 
-   使用json样式，
+   使用json样式，推荐使用 https://www.json.cn/ 进行在线编辑
 
    ```json
    {
