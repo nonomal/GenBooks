@@ -147,9 +147,9 @@ class processRss:
                 ncx_article += keys.ncx_article.format(**post)
                 self.playorder += 1
                 postnum += 1#计算这里面有多少篇文章
-            feed_para = {"subtitle":subtitle,"feed":feed_content,"toc":toc_content,"css":keys.css + rssjson["css"]}
+            feed_para = {"subtitle":subtitle,"feed":feed_content,"tocbody":toc_content,"css":keys.css + rssjson["css"]}
             epub["feeds"].append({"feedid":str(feedid),"content":keys.feed.format(**feed_para)})
-            epub["tocs"].append({"feedid":str(feedid),"content":keys.feed.format(**feed_para)})
+            epub["tocs"].append({"feedid":str(feedid),"content":keys.toc.format(**feed_para)})
             feed_para.update({"postnum":postnum,"ncx_article":ncx_article,"feedid":feedid,"playorder":str(self.playorder-postnum)})
             ncx_feed += keys.ncx_feed.format(**feed_para)#每一个feed都要生成ncx，集成一个
             toc_summary_body += keys.toc_summary_body.format(**feed_para)
