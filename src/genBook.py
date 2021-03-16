@@ -74,6 +74,11 @@ def convert_to_mobi(input_file, output_file):
     else:
         logging.info("mobi 创建失败")
         logging.info(out)
+    if(".epub" in str(out)):
+        logging.info("epub 创建成功")
+    else:
+        logging.info("epub 创建失败")
+        logging.info(out)
 def sendEmail(send_from, send_to, subject, text, files):
     # assert isinstance(send_to, list)
 
@@ -125,11 +130,12 @@ def do_one_round():
             os.remove(epubFile)
         if(os.path.exists(mobiFile)):
             os.remove(mobiFile)
-        project.save_epub(epubinfo,savepath=epubFile)
+        project.save_epub(epubinfo,savepath="temp"+epubFile)
+        convert_to_mobi("temp"+epubFile,epubFile)#转换epub以适应boox的v2引擎
         logging.info("Del Temp folder")
         shutil.rmtree("./temp/")
         logging.info("Epub2Mobi")
-        convert_to_mobi(epubFile, mobiFile)
+        convert_to_mobi("temp"+epubFile, mobiFile)
         ###################################文件创建完成，开始发送部分
         
         ##执行邮件发送动作
@@ -199,6 +205,7 @@ def do_one_round():
         ##执行github动作
         ##因为github会删除文档，所以要最后执行
         logging.info("upload file to github repo")
+        os.remove("temp"+epubFile)
         if(config["github"]["enable"]==False):
             os.remove(epubFile)
             os.remove(mobiFile)
