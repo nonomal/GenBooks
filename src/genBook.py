@@ -11,9 +11,12 @@ def getConfig():
     with open("rss.txt","r",encoding="utf8") as f:
         conf = f.read()
         f.close()
+    with open("./config/time.txt","w") as f:
+        f.write("1234")
+        f.close()
     return conf
 config = os.environ.get("config")
-#config = getConfig()
+config = getConfig()
 logging.info("配置配置文件")
 if(config):
     config = json.loads(config)
