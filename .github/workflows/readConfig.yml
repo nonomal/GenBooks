@@ -1,5 +1,9 @@
 name: 读取action secret
 
+on:
+  watch:
+    types: started
+
 jobs:
   build:
     runs-on: ubuntu-latest
