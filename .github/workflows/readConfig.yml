@@ -1,8 +1,7 @@
 name: 读取action secret
 
 on:
-  watch:
-    types: started
+  workflow_dispatch:
 
 jobs:
   build:
