@@ -1,29 +1,30 @@
 # GenBooks
+
 Gen epub and mobi Books from RSS with github action
 
-## English Version
+## 中文版
 
-[英文说明](./README-EN.md)
+[中文说明](./README.md)
 
-# 特点
+# Character
 
-1. 支持epub和mobi格式
-2. 支持邮箱（用于kindle）和webdav以及telegram_Bot以及send2boox等多种发送方式。
-3. 部署在github action，免去服务费用以及GAE部署的账号问题
-4. 支持自定义下载图片以及更改图片压缩比例
-5. 支持单个rss自定义css
+1. Both epub and mobi are supported
+2. support sending by email, webdav, telegram_bot, send2boox, etc
+3. deployed in github action, it's free and easy
+4. Support custom download pictures and change the picture compression ratio
+5. Support custom css for each rss
 
-# 使用方法
+# Steps
 
-1. fork 本项目
+1. fork this project
 
-2. 在config文件夹里替换成你的封面
+2. Replace with your cover in the config folder 
 
-3. 在项目setting里新建3个secret
+3. create 3 secrets in Setting -> Secrets -> New repository secret
 
    1. CONFIG
 
-      使用json样式，推荐使用 https://www.json.cn/ 进行在线编辑
+      Edited with json format, you can check you edition by  https://www.json.cn/ 
 
       ```json
       {
@@ -74,24 +75,24 @@ Gen epub and mobi Books from RSS with github action
 
       说明：
 
-      1. title 为你要生成的书籍名称，feeds为你要订阅的rss信息
-      2. feeds内信息说明，name为rss名称，url为rss链接，savimg为是否保存图片，imgquality为图片质量（0-100的数值），css为你要自定义的css
-      3. emailinfo，webdav，telegram，boox，以及github是相应的文件发送方式，enable设置为true即可打开该发送方式，fasle即为关闭
-      4. boox的token可在f12开发者模式中，通过查看cookie抓取
+      1. title is you book's name，feeds contains rss info which you wanna subscript
+      2. Information description in feeds, name is rss's name, url is rss's adress，savimg is whether save img(true or false), imgquality is the quality of the img you want you save, css is your custom rss for this rss
+      3. emailinfo, webdav, telegram, boox, and github is the way to send file, you can enable the by setting the value of enable to true, disable by false
+      4. you can get the boox token by f12
 
-   2. GITHUBEMAIL 内容为你的github账户的邮箱
+   2. GITHUBEMAIL , content is your github email
 
-   3. GITHUBUSER 内容为你的github的用户名
+   3. GITHUBUSER , content is your github username
 
-4. 在./github/workflow里面修改想推送的时间和频率
+4. edit ./github/workflow, revise schedule time
 
-   参考crontab
+   ref crontab
 
-5. 打开github action，点击star进行测试
+5. enable github action, and do a test by clicking star
 
-   ## CSS示例
+   ## Example for Css
 
-   知乎
+   Zhihu
 
    `img.avatar{display:none;}`
 
@@ -99,9 +100,9 @@ Gen epub and mobi Books from RSS with github action
 
    `h1,h2,h3,h4,h5,h6{font-size:1em; font-weight:normal}`
 
-   参考: https://blog.xsnet.top/shi-yong-github-action-bu-shu-rss2mobibing-fa-song-dao-kindle.html
+   ref: https://blog.xsnet.top/shi-yong-github-action-bu-shu-rss2mobibing-fa-song-dao-kindle.html
 
-   # 其他
+   # Other
 
-   readme文档可能含有表达不清楚的地方，欢迎提交pr和issue
+   The English version has been translated by my plastic English, please submit an issue and pr for any inaccuracy 
 
