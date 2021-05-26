@@ -3,7 +3,7 @@ Gen epub and mobi Books from RSS with github action
 
 ## English Version
 
-[英文说明](./README-EN.md)
+[English Version](./README-EN.md)
 
 # 特点
 
