@@ -23,6 +23,8 @@ Gen epub and mobi Books from RSS with github action
 3. create 3 secrets in Setting -> Secrets -> New repository secret
 
    1. CONFIG
+   
+        you can also setup by edit rss.conf under src, Secret takes precedence over rss.conf
 
       Edited with json format, you can check you edition by  https://www.json.cn/ 
 

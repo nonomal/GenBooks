@@ -23,6 +23,8 @@ Gen epub and mobi Books from RSS with github action
 
    1. CONFIG
 
+        也可以修改rss.conf进行配置，secret的优先级大于rss.conf
+
       使用json样式，推荐使用 https://www.json.cn/ 进行在线编辑
 
       ```json

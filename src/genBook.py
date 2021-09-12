@@ -8,18 +8,21 @@ from boox import send2Boox
 logging.basicConfig(level=logging.INFO)
 def getConfig():
     ### 仅调试时使用
-    with open("rss.txt","r",encoding="utf8") as f:
+    with open("rss.conf","r",encoding="utf8") as f:
         conf = f.read()
-        f.close()
-    with open("./config/time.txt","w") as f:
-        f.write("1234")
         f.close()
     return conf
 config = os.environ.get("config")
 #config = getConfig()
-logging.info("配置配置文件")
-if(config):
-    config = json.loads(config)
+logging.info("loading config")
+try:
+    if(config):
+        config = json.loads(config)
+    else:
+        logging.info("get env fail, try to read rss.conf")
+        config = json.loads(getConfig())
+except:
+    logging.info("error occurred when reading config")
 feeds = config["feeds"]
 booktitle = config["title"]
 emailInfo = config["emailinfo"]
@@ -73,14 +76,14 @@ def convert_to_mobi(input_file, output_file):
     #print ("Result : "+out.decode() )
     #print(str(out))
     if(".mobi" in str(out)):
-        logging.info("mobi 创建成功")
+        logging.info("mobi created success")
     else:
-        logging.info("mobi 创建失败")
+        logging.info("mobi created fail")
         logging.info(out)
     if(".epub" in str(out)):
-        logging.info("epub 创建成功")
+        logging.info("epub created success")
     else:
-        logging.info("epub 创建失败")
+        logging.info("epub created fail")
         logging.info(out)
 def sendEmail(send_from, send_to, subject, text, files):
     # assert isinstance(send_to, list)
