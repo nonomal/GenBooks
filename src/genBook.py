@@ -8,7 +8,7 @@ from boox import send2Boox
 logging.basicConfig(level=logging.INFO)
 def getConfig():
     ### 仅调试时使用
-    with open("./rss.conf","r",encoding="utf8") as f:
+    with open("./config/rss.conf","r",encoding="utf8") as f:
         conf = f.read()
         f.close()
     return conf
