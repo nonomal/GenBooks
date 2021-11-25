@@ -74,8 +74,11 @@ class processRss:
             imgformats = ["jpg","png"]
             thisformat = False
             for imgformat in imgformats:
-                if(imgformat in img['src']):
-                    thisformat = imgformat
+                try:
+                    if(imgformat in img['src']):
+                        thisformat = imgformat
+                except:#if not src attr
+                    thisformat = False
             #print(thisformat)
             if(thisformat):
                 #_thread.start_new_thread(downloadimg,(img['src'],imgid,thisformat,))
