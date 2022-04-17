@@ -108,6 +108,7 @@ class send2Boox:
                 return(False)
         except:
             return(False)
-#token = "..Lg8O9-"
-#f=open("星索的.epub","rb")
-#print(send2Boox(token,"星索的.epub".encode("utf-8").decode("latin1"),f).putFile())
+if __name__ == '__main__':
+    token = ".-0xpMNg"
+    f=open("123.pdf","rb")
+    print(send2Boox(token,"123.pdf".encode("utf-8").decode("latin1"),f).putFile())
