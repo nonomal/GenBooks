@@ -19,6 +19,7 @@ jobs:
         python-version: 3.9.1
     - name: 配置环境
       run: |
+        apt install libegl1 libopengl0
         sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
         pip3 install requests
         pip3 install pytz
